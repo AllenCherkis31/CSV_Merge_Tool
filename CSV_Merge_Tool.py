@@ -1,8 +1,9 @@
 import pandas as pd
+
+
+
 def main():
-    #program will continue to run and reset itself while 'again' equals 1
-    again = 1
-    while again == 1:
+
         #select csv files
         file1 = input("Submit the name of your CSV file (exclude file extension)")
         file2 = input("Submit the name of a second CSV file (exclude file extension)")
@@ -13,12 +14,20 @@ def main():
             print(f"{file1}.csv was not found in this directory. Check spelling or try moving the file to the correct location.")
             print("Restarting...")
             main()
+        except pd.errors.EmptyDataError:
+            print(f"{file1}.csv is empty. Try another file.")
+            print("Restarting...")
+            main()
         try:
             df2 = pd.read_csv(f'{file2}.csv')
         except FileNotFoundError:
             print(f"{file2}.csv was not found in this directory. Check spelling or try moving the file to the correct location.")
             print("Restarting...")
             main()
+        except pd.errors.EmptyDataError:
+            print(f"{file2}.csv is empty. Try another file.")
+            print("Restarting...")
+            main()    
         #select key column
         key = input("Enter the title of a common column which both datasets will merge on.")
         #merge two data frames based on common key
@@ -66,42 +75,12 @@ def main():
         else:
             contacts = df3
             print(f'{contacts.to_string()}')
-        export_question = input("Would you like to export this output to a csv file (recommended)? Please answer with 'yes' or 'no'.")
-        if export_question != 'yes' and export_question != 'no':
-            export_question = input("Invalid input. Please answer with 'yes' or 'no'.")
+
+        def exportQ():
+            export_question = input("Would you like to export this output to a csv file (recommended)? Please answer with 'yes' or 'no'.")
             if export_question != 'yes' and export_question != 'no':
-                export_question = input("Invalid input. Program will exit with one more failed attempt. Please answer with 'yes' or 'no'.")
-                if export_question != 'yes' and export_question != 'no':
-                    print("Invalid input.")
-                    print("Goodbye.")
-                    again = 0
-                    exit()
-                elif export_question == 'yes':
-                    #ask for file name
-                    name = input("What would you like to name this file?")
-                    #export to csv
-                    contacts.to_csv(f'{name}.csv')
-                    print(f'{name}.csv has been saved to this directory.')
-                    restart = input("Would you like to start over? Please answer with 'yes' or 'no'.")
-                    if restart != 'yes' and restart != 'no':
-                        again = input("Invalid input. Please answer with 'yes' or 'no'.")
-                    elif restart == 'yes':
-                        again = 1  
-                    elif restart == 'no':
-                        print("Goodbye.")
-                        again = 0
-                        exit()
-                    
-                elif export_question == 'no':
-                    restart = input("Would you like to start over? Please answer with 'yes' or 'no'.")
-                    if restart != 'yes' and restart != 'no':
-                        again = input("Invalid input. Please answer with 'yes' or 'no'.")
-                    elif restart == 'yes':
-                        again = 1  
-                    elif restart == 'no':
-                        print("Goodbye.")
-                        again = 0
-                        exit()
+                print("Invalid input. Please answer with 'yes' or 'no'.")
+                exportQ()
             elif export_question == 'yes':
                 #ask for file name
                 name = input("What would you like to name this file?")
@@ -110,50 +89,24 @@ def main():
                 print(f'{name}.csv has been saved to this directory.')
                 restart = input("Would you like to start over? Please answer with 'yes' or 'no'.")
                 if restart != 'yes' and restart != 'no':
-                    again = input("Invalid input. Please answer with 'yes' or 'no'.")
+                    print("Invalid input. Please answer with 'yes' or 'no'.")
+                    exportQ()
                 elif restart == 'yes':
-                    again = 1  
+                    main()
                 elif restart == 'no':
                     print("Goodbye.")
-                    again = 0
+                    main()
                     exit()
-                
+                    
             elif export_question == 'no':
                 restart = input("Would you like to start over? Please answer with 'yes' or 'no'.")
                 if restart != 'yes' and restart != 'no':
-                    again = input("Invalid input. Please answer with 'yes' or 'no'.")
+                    print("Invalid input. Please answer with 'yes' or 'no'.")
+                    exportQ()
                 elif restart == 'yes':
-                    again = 1  
+                    main()
                 elif restart == 'no':
                     print("Goodbye.")
-                    again = 0
                     exit()
-            
-                
-        elif export_question == 'yes':
-            #ask for file name
-            name = input("What would you like to name this file?")
-            #export to csv
-            contacts.to_csv(f'{name}.csv')
-            print(f'{name}.csv has been saved to this directory.')
-            restart = input("Would you like to start over? Please answer with 'yes' or 'no'.")
-            if restart != 'yes' and restart != 'no':
-                again = input("Invalid input. Please answer with 'yes' or 'no'.")
-            elif restart == 'yes':
-                again = 1  
-            elif restart == 'no':
-                print("Goodbye.")
-                again = 0
-                exit()
-                
-        elif export_question == 'no':
-            restart = input("Would you like to start over? Please answer with 'yes' or 'no'.")
-            if restart != 'yes' and restart != 'no':
-                again = input("Invalid input. Please answer with 'yes' or 'no'.")
-            elif restart == 'yes':
-                again = 1  
-            elif restart == 'no':
-                print("Goodbye.")
-                again = 0
-                exit()
+        exportQ()
 main()
